@@ -1,9 +1,10 @@
 import { ITodo } from './typeings';
+import EventData from './EventData';
 //? 为什么不能使用 ts 导入
 (() => {
   const btn: HTMLButtonElement = document.querySelector('button')!;
   const inp: HTMLInputElement = document.querySelector('input')!;
-  const wrapper: HTMLDivElement = document.querySelector('#app')!;
+  const contentWrapper: HTMLDivElement = document.querySelector('.content')!;
 
   const todoData: Array<ITodo> = [
     {
@@ -13,21 +14,28 @@ import { ITodo } from './typeings';
     },
   ];
 
+  //#  声明的时候写类型, 调用的时候就不用写类型了
+  const dataTier = new EventData(todoData, contentWrapper);
+
   init();
   function init(): void {
     bindEvent();
   }
 
   function bindEvent(): void {
-    wrapper.addEventListener('click', clickHandler);
+    btn.addEventListener('click', btnClickHandler);
+    contentWrapper.addEventListener('click', contentClickHandler);
   }
 
-  function clickHandler(e: Event) {
+  function btnClickHandler(e: Event) {
     //?事件对象的类型有点不清楚
     //? e.target 应该是什么, 是 dom 才有 nodeName,tagName 什么的吧
-
-    if ((e.target as HTMLElement).tagName === 'BUTTON') {
-      alert('aaa');
-    }
+    const content: string = inp.value?.trim();
+    if (!content) return alert('不能添加空值');
+    const data: ITodo = { id: Date.now(), content, finish: false };
+    dataTier.addData(data);
+  }
+  function contentClickHandler(e: MouseEvent): void {
+    console.log('content');
   }
 })();
