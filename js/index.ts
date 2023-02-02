@@ -34,8 +34,18 @@ import EventData from './EventData';
     if (!content) return alert('不能添加空值');
     const data: ITodo = { id: Date.now(), content, finish: false };
     dataTier.addData(data);
+    inp.value = '';
   }
   function contentClickHandler(e: MouseEvent): void {
     console.log('content');
+    if ((e.target as HTMLElement).nodeName === 'BUTTON') {
+      // ~ 为删除
+      //? 类型“Element”上不存在属性“dataset”
+      dataTier.delData(
+        //@ts-ignore
+
+        (e.target as HTMLElement).previousElementSibling!.dataset.id,
+      );
+    }
   }
 })();

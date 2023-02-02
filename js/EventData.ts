@@ -15,4 +15,8 @@ export default class EventData extends EventDom {
     this.todoData.push(data);
     this.addDom(this.todoData);
   }
+  public delData(id: number) {
+    this.todoData = this.todoData.filter((item) => item.id != id)!;
+    this.addDom(this.todoData);
+  }
 }
