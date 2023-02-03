@@ -43,8 +43,14 @@ import EventData from './EventData';
       //? 类型“Element”上不存在属性“dataset”
       dataTier.delData(
         //@ts-ignore
-
         (e.target as HTMLElement).previousElementSibling!.dataset.id,
+      );
+    } else if ((e.target as HTMLElement).nodeName === 'INPUT') {
+      console.log('aaa');
+
+      dataTier.toggleData(
+        //@ts-ignore
+        (e.target as HTMLElement).nextElementSibling!.dataset.id,
       );
     }
   }

@@ -19,4 +19,13 @@ export default class EventData extends EventDom {
     this.todoData = this.todoData.filter((item) => item.id != id)!;
     this.addDom(this.todoData);
   }
+  public toggleData(id: number) {
+    let temp: ITodo = this.todoData.find((item) => item.id == id)!;
+    console.log(temp, 'temp');
+
+    temp.finish = !temp.finish;
+    console.log(this.todoData, 'this.todoData');
+
+    this.addDom(this.todoData);
+  }
 }

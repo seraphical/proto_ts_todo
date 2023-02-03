@@ -10,7 +10,11 @@ export default class EventTemplate {
     this.wrapper = data.reduce((pre, item) => {
       return (
         pre +
-        `<div> <input type="checkbox"><span data-id="${item.id}" style="width:125px;display:inline-block">${item.content}</span><button>删除</button></div>`
+        `<div> <input type="checkbox" ${
+          item.finish ? 'checked' : ''
+        }><span data-id="${item.id}" style="width:125px;display:inline-block;${
+          item.finish ? 'text-decoration:line-through' : ''
+        }" >${item.content}</span><button>删除</button></div>`
       );
     }, '');
   }
