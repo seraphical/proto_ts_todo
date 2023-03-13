@@ -9,15 +9,15 @@ export default class EventData extends EventDom {
     this.initList();
   }
   private initList() {
-    this.addDom(this.todoData);
+    this.renderDom(this.todoData);
   }
   public addData(data: ITodo) {
     this.todoData.push(data);
-    this.addDom(this.todoData);
+    this.renderDom(this.todoData);
   }
   public delData(id: number) {
     this.todoData = this.todoData.filter((item) => item.id != id)!;
-    this.addDom(this.todoData);
+    this.renderDom(this.todoData);
   }
   public toggleData(id: number) {
     let temp: ITodo = this.todoData.find((item) => item.id == id)!;
@@ -26,6 +26,6 @@ export default class EventData extends EventDom {
     temp.finish = !temp.finish;
     console.log(this.todoData, 'this.todoData');
 
-    this.addDom(this.todoData);
+    this.renderDom(this.todoData);
   }
 }

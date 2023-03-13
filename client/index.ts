@@ -46,8 +46,6 @@ import EventData from './EventData';
         (e.target as HTMLElement).previousElementSibling!.dataset.id,
       );
     } else if ((e.target as HTMLElement).nodeName === 'INPUT') {
-      console.log('aaa');
-
       dataTier.toggleData(
         //@ts-ignore
         (e.target as HTMLElement).nextElementSibling!.dataset.id,

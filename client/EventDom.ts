@@ -8,8 +8,8 @@ export default class EventDom extends EventTemplate {
     super();
     this.content = contentWrapper;
   }
-  protected addDom(data: Array<ITodo>) {
-    this.addTemplate(data);
+  protected renderDom(data: Array<ITodo>) {
+    this.renderTemplate(data);
     this.content.innerHTML = this.wrapper;
   }
 }
