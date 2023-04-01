@@ -1,8 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import router from './router/index';
+import config from './config';
+import { connect } from './model';
 
 const app = express();
+connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -17,6 +20,9 @@ app.use(bodyParser.json());
 
 app.use(router);
 
-app.listen(4000, () => {
-  console.log('开启成功,正在监听 4000 端口');
+app.listen(config.PORT, () => {
+  console.log(`开启成功,正在监听 ${config.PORT}端口`);
 });
+// app.listen(4000, () => {
+//   console.log(`开启成功,正在监听 4000端口`);
+// });
