@@ -1,17 +1,164 @@
 # mvc 模式
 
 ## 目录结构
+```
+├─ src                     源码
+│  ├─ app                  业务代码
+│  │  ├─ controllers       控制器：用于解析用户输入，处理后返回相应的结果
+│  │  ├─ models            模型  ：用于定义数据模型
+│  │  ├─ services          服务  ：用于编写业务逻辑层，比如连接数据库，调用第三方接口等
+│  │  └─ views             视图  ：用于放置模板文件，返回客户端的视图层
+│  │
+│  ├─ core                 核心代码
+│  │  ├─ controller.js     控制器基类
+│  │  ├─ model.js          模型基类
+│  │  └─ service.js        服务基类
+│  │
+│  ├─ middlewares          中间件
+│  ├─ public               静态资源
+│  ├─ router               URL 路由
+│  ├─ utils                工具库
+│  └─ index.js             入口：用于自定义启动时的初始化工作，比如启动 https，调用中间件、路由等
+│  
+├─ .eslintrc               eslint 配置文件
+├─ nodemon.json            nodemon 配置文件
+├─ package.json            npm 配置文件
+├─ processes.json          pm2 配置文件
+```
+后端数据流转流程: 
+- router->controller -> 通过数据库进行查找
+- 数据库查找过程: controller 对 service 进行操作, model 对数据库进行访问
+比如我要查找文章,通过/artical 访问, 进入 artical 的 controller, controller  对数据库进行查询
+而数据库进行查询是通过 service 来根据定义好的数据模型(modal)来进行查询
+### model
+模型  ：用于定义数据模型
 
-- router(路由)
-- controller
-- app.ts(入口文件)
-- model
-- config
-- static(管理静态文件)
-- utils(工具函数, 使用类书写)
-- view(视图层)
+ 什么叫做数据模型?
+
+ src/app/models/articles.js
+```js
+module.exports = app => {
+  const {ID, SHORT_RELATED_ID, NAME, TITLE, SUBTITLE, DESCRIPTION, CONTENT, PICTURES, ORDER} = app.$model.columns
+
+  return app.$model.define('articles', {
+    id: ID,
+    category_id: SHORT_RELATED_ID,
+    author: NAME,
+    title: TITLE,
+    subtitle: SUBTITLE,
+    description: DESCRIPTION,
+    content: CONTENT,
+    pictures: PICTURES,
+    order: ORDER
+  })
+}
+```
+###  服务
+src/app/services/articles.js
+```js
+module.exports = app => {
+  return class extends app.$Service {
+    constructor () {
+      super()
+
+      this.model = app.$models.articles
+    }
+  }
+}
+
+```
+### 控制器
+src/app/controllers/articles.js
+```js
+module.exports = app => {
+  const service = app.$services.articles
+
+  return class extends app.$Controller {
+    async index (ctx, next) {
+      await ctx.render('articles', {
+        items: await service.find({offset: 0, limit: 10})
+      })
+    }
+  }
+}
+
+```
+### API
+src/app/controllers/apis/v1/articles.js
+```js
+module.exports = app => {
+  const service = app.$services.articles
+
+  return class extends app.$Controller {
+    async index (ctx, next) {
+      ctx.response.body = ctx.send({
+        status: 200,
+        data: await service.find({offset: 0, limit: 10})
+      })
+    }
+  }
+}
+```
+
+# 进度
+
+连接数据库->熟悉查询语句->对数据的增删改进行操作
+
+## @230331
+
+当前构建完基本结构, 熟悉了字段的数据类型,比如 char,int,varchar.
+重新理解字节和位的关系
+熟悉连接表的语法
+
+```js
+let pool = mysql.createPool({ host, port, user, passward, database });
+pool.getConnection((err, connect) => {});
+pool.query(sql, (err, data) => {});
+```
+
+## @230401
+
+熟悉 mysql 各个查询指令
+
+## 230421
+昨天写完了大致的接口, 增删改查
+那么今天就让前端使用装饰器进行调用吧
+
+# 代码分析
+
+## 泛型
+函数表达式使用泛型的时候这样使用
+
+```js
+export const delTodo = <T>(id: T): Promise<IRes> => {
+  return new Promise(async (resolve) => {
+    let SQL = 'DELETE FROM `test` WHERE `id`= ?';
+    const result = await query(SQL, [id]);
+    resolve(result);
+  });
+};
+```
+
+而命名函数使用泛型则
+```js
+function <T>fn(name:T):void{
+}
+```
+## 函数的可选参数
+```js
+function fn(name:string,age?:number)
+```
+## 函数表达式的类型定义
+```js
+const getFullName: (name: string) => string = (name: string): string => {
+	return `Rainy ${name}`;
+}
+```
+
 
 # 错误记录
+
+## ts-node-dev 启动错误
 
 将所有模块改造成 es6 语法之后报错, Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
 在 package.json 中添加 type:moudule 之后才行

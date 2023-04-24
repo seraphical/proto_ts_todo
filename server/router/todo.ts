@@ -1,10 +1,19 @@
 import express from 'express';
-import { delHandler, helloHandler } from '../controller/todo';
+import {
+  delHandler,
+  queryAllHandler,
+  addHandler,
+  toggleHandler,
+} from '../app/controllers/todo';
 
 const todoRouter = express.Router();
 
-todoRouter.get('/', helloHandler);
+todoRouter.get('/', queryAllHandler);
 
-todoRouter.get('/del', delHandler);
+todoRouter.post('/del', delHandler);
+
+todoRouter.post('/add', addHandler);
+
+todoRouter.post('/toggle', toggleHandler);
 
 export default todoRouter;

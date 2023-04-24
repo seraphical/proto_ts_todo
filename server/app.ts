@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import router from './router/index';
 import config from './config';
-import { connect } from './model';
+import { connect } from './core/model';
 
 const app = express();
 connect();
